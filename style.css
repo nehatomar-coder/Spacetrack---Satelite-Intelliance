@@ -238,7 +238,6 @@ h1 span {
     border-radius: 6px;
 }
 
-/* GPS Coordinate Input CSS (New Feature) */
 .coord-box {
     background: rgba(3, 3, 8, 0.6);
     border: 1px solid rgba(168, 85, 247, 0.2);
@@ -377,6 +376,7 @@ h1 span {
     position: relative;
 }
 
+/* SCANNING LASER LINE (Only visible while scanning) */
 .scanning-laser {
     position: absolute;
     top: 0;
@@ -385,7 +385,8 @@ h1 span {
     height: 3px;
     background: var(--accent-red);
     box-shadow: 0 0 12px var(--accent-red);
-    animation: scanLaser 3s infinite ease-in-out;
+    animation: scanLaser 2s infinite ease-in-out;
+    z-index: 5;
 }
 
 @keyframes scanLaser {
@@ -395,13 +396,57 @@ h1 span {
     }
 
     50% {
-        top: 90%;
+        top: 88%;
         opacity: 1;
     }
 
     100% {
         top: 25px;
         opacity: 0.8;
+    }
+}
+
+/* RED BOUNDING BOX OVERLAY (Appears after scan finishes) */
+.ai-bounding-box {
+    display: none;
+    position: absolute;
+    top: 20%;
+    left: 25%;
+    width: 50%;
+    height: 50%;
+    border: 2px dashed var(--accent-red);
+    background: rgba(244, 63, 94, 0.22);
+    border-radius: 6px;
+    box-shadow: 0 0 20px rgba(244, 63, 94, 0.5);
+    animation: pulseBox 1.8s infinite ease-in-out;
+    pointer-events: none;
+    z-index: 4;
+}
+
+.box-label {
+    position: absolute;
+    top: -24px;
+    left: -2px;
+    background: var(--accent-red);
+    color: #fff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+@keyframes pulseBox {
+
+    0%,
+    100% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.02);
     }
 }
 
@@ -436,7 +481,6 @@ h1 span {
     margin-bottom: 12px;
 }
 
-/* Download Report Button CSS (New Feature) */
 .btn-download {
     width: 100%;
     background: rgba(168, 85, 247, 0.15);

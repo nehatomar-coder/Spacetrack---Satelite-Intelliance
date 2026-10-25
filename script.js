@@ -3,10 +3,7 @@ let uploadedAfter = null;
 let isScanning = false;
 let lastResult = null;
 
-// Scene ka assumed total area (hectares). Apne hisaab se badal sakti ho.
 const SCENE_AREA_HECTARES = 50;
-
-// Land-cover classes
 const VEG = 0, BUILT = 1, WATER = 2, BARREN = 3;
 const CLASS_NAMES = ["Vegetation", "Built-up", "Water", "Barren soil"];
 
@@ -19,13 +16,13 @@ function handleImageUpload(event, type) {
                 uploadedBefore = e.target.result;
                 document.getElementById('beforePreviewContent').innerHTML = `
                     <img src="${uploadedBefore}" class="preview-thumb" alt="Baseline">
-                    <p style="margin-top:3px; color:#22c55e; font-size:10px;">✔ Baseline Loaded</p>
+                    <p style="margin-top:3px; color:#10b981; font-size:10px;">✔ Baseline Loaded</p>
                 `;
             } else {
                 uploadedAfter = e.target.result;
                 document.getElementById('afterPreviewContent').innerHTML = `
                     <img src="${uploadedAfter}" class="preview-thumb" alt="Target">
-                    <p style="margin-top:3px; color:#22c55e; font-size:10px;">✔ Target Loaded</p>
+                    <p style="margin-top:3px; color:#10b981; font-size:10px;">✔ Target Loaded</p>
                 `;
             }
         };
@@ -33,7 +30,6 @@ function handleImageUpload(event, type) {
     }
 }
 
-// ---------- Image helpers ----------
 function loadImage(src) {
     return new Promise((resolve, reject) => {
         const img = new Image();
@@ -43,16 +39,15 @@ function loadImage(src) {
     });
 }
 
-// Ek pixel ko land-cover class mein dalta hai
 function classifyPixel(r, g, b) {
     const max = Math.max(r, g, b);
     const min = Math.min(r, g, b);
     const sat = max === 0 ? 0 : (max - min) / max;
 
-    if (sat < 0.18) return BUILT;                       // gray / white / dark = concrete, road, building
-    if (b > r + 15 && b >= g) return WATER;             // blue = water
-    if (g > b + 15 && g > r * 0.9) return VEG;          // green = vegetation
-    return BARREN;                                      // warm brown / sandy = soil
+    if (sat < 0.18) return BUILT;
+    if (b > r + 15 && b >= g) return WATER;
+    if (g > b + 15 && g > r * 0.9) return VEG;
+    return BARREN;
 }
 
 function analyzeImages(baseImg, targetImg) {
@@ -72,7 +67,6 @@ function analyzeImages(baseImg, targetImg) {
     const total = W * H;
     const before = [0, 0, 0, 0];
     const after = [0, 0, 0, 0];
-    // transitions[from][to]
     const t = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
     let changed = 0;
 
@@ -104,10 +98,8 @@ function analyzeImages(baseImg, targetImg) {
     };
 }
 
-// Result ka type decide karta hai (images ke hisaab se)
 function interpret(r) {
-    const T = 10; // threshold (% of scene)
-
+    const T = 10;
     if (r.changePct < 5) {
         return {
             level: "none", status: "NO SIGNIFICANT CHANGE",
@@ -168,7 +160,6 @@ function coverText(arr) {
     return arr.map((v, i) => `${CLASS_NAMES[i]} ${v.toFixed(0)}%`).join(" | ");
 }
 
-// ---------- Main scan ----------
 async function executeAdvancedAnalysis() {
     if (isScanning) return;
 
@@ -185,8 +176,15 @@ async function executeAdvancedAnalysis() {
     const lon = document.getElementById('lonInput').value;
 
     const analysisSection = document.getElementById('analysisResultsSection');
+    const scanningLaser = document.getElementById('scanningLaser');
+    const aiBoundingBox = document.getElementById('aiBoundingBox');
+
     analysisSection.style.display = "block";
     analysisSection.scrollIntoView({ behavior: 'smooth' });
+
+    // Show laser line during active scan, hide red bounding box
+    scanningLaser.style.display = "block";
+    aiBoundingBox.style.display = "none";
 
     document.getElementById('viewBefore').src = uploadedBefore;
     document.getElementById('viewAfter').src = uploadedAfter;
@@ -199,6 +197,30 @@ async function executeAdvancedAnalysis() {
     document.getElementById('downloadBtn').style.display = "none";
 
     let r;
+    let apiBox = null;
+
+    // Try Localhost API call first, fallback to browser canvas matrix
+    try {
+        const fileBefore = document.getElementById('beforeImageInput').files[0];
+        const fileAfter = document.getElementById('afterImageInput').files[0];
+
+        if (fileBefore && fileAfter) {
+            const formData = new FormData();
+            formData.append('before', fileBefore);
+            formData.append('after', fileAfter);
+            formData.append('lat', lat);
+            formData.append('lon', lon);
+
+            const resApi = await fetch('/api/analyze', { method: 'POST', body: formData });
+            if (resApi.ok) {
+                const apiData = await resApi.json();
+                if (apiData.box) apiBox = apiData.box;
+            }
+        }
+    } catch (e) {
+        console.log("Local API fallback used.");
+    }
+
     try {
         const [baseImg, targetImg] = await Promise.all([
             loadImage(uploadedBefore),
@@ -207,6 +229,7 @@ async function executeAdvancedAnalysis() {
         r = analyzeImages(baseImg, targetImg);
     } catch (err) {
         terminal.innerHTML = "> ERROR: Image analysis failed.<br>";
+        scanningLaser.style.display = "none";
         isScanning = false;
         if (btn) btn.disabled = false;
         return;
@@ -241,6 +264,18 @@ async function executeAdvancedAnalysis() {
             i++;
             setTimeout(typeWriter, 300);
         } else {
+            // STOP AND HIDE SCANNING LASER WHEN COMPLETE
+            scanningLaser.style.display = "none";
+
+            // SHOW RED HIGHLIGHT BOUNDING BOX OVERLAY
+            if (apiBox) {
+                aiBoundingBox.style.top = (apiBox.top || 20) + '%';
+                aiBoundingBox.style.left = (apiBox.left || 25) + '%';
+                aiBoundingBox.style.width = (apiBox.width || 50) + '%';
+                aiBoundingBox.style.height = (apiBox.height || 50) + '%';
+            }
+            aiBoundingBox.style.display = "block";
+
             document.getElementById('downloadBtn').style.display = "block";
             isScanning = false;
             if (btn) btn.disabled = false;
@@ -249,7 +284,6 @@ async function executeAdvancedAnalysis() {
     typeWriter();
 }
 
-// ---------- Download Report ----------
 function downloadReport() {
     if (!lastResult) return;
 

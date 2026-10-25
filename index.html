@@ -59,7 +59,7 @@
                 </div>
             </div>
 
-            <!-- GPS Coordinate Input Box (New Feature) -->
+            <!-- GPS Coordinate Input Box -->
             <div class="coord-box">
                 <h4>📍 Target GPS Coordinates</h4>
                 <div class="coord-inputs">
@@ -89,7 +89,7 @@
         <section class="visual-panel" id="analysisResultsSection" style="display: none;">
             <div class="panel-header">
                 <h2>📊 Multi-Spectral Comparative Analysis</h2>
-                <span class="badge-alert">ANOMALY DETECTED</span>
+                <span class="badge-alert" id="statusBadge">ANOMALY DETECTED</span>
             </div>
 
             <div class="comparison-viewport">
@@ -100,7 +100,12 @@
                 <div class="viewport-box highlight-glow">
                     <span class="viewport-tag alert-tag">AI Diff Overlay (Changes Highlighted)</span>
                     <img id="viewAfter" src="" alt="Target">
-                    <div class="scanning-laser"></div>
+                    <!-- SCANNING LASER (Active ONLY during scan) -->
+                    <div class="scanning-laser" id="scanningLaser" style="display:none;"></div>
+                    <!-- AI RED BOUNDING BOX OVERLAY (Appears AFTER scan complete) -->
+                    <div class="ai-bounding-box" id="aiBoundingBox">
+                        <span class="box-label">⚠️ ANOMALY DETECTED</span>
+                    </div>
                 </div>
             </div>
 
@@ -111,7 +116,7 @@
                 </div>
                 <div class="terminal-content" id="terminalOutput"></div>
 
-                <!-- Download Report Button (New Feature) -->
+                <!-- Download Report Button -->
                 <button class="btn-download" id="downloadBtn" style="display:none;" onclick="downloadReport()">
                     📥 Download Official GIS Compliance Report (.txt)
                 </button>
