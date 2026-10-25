@@ -1,0 +1,457 @@
+:root {
+    --bg-base: #050508;
+    --panel-bg: rgba(18, 15, 30, 0.85);
+    --border-glass: rgba(168, 85, 247, 0.25);
+    --accent-purple: #a855f7;
+    --accent-magenta: #e879f9;
+    --accent-cyan: #22d3ee;
+    --accent-red: #f43f5e;
+    --accent-green: #10b981;
+    --text-main: #f3e8ff;
+    --text-muted: #9ca3af;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-base);
+    color: var(--text-main);
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.space-grid-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(to right, rgba(168, 85, 247, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(168, 85, 247, 0.05) 1px, transparent 1px);
+    background-size: 35px 35px;
+    z-index: -1;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--panel-bg);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--border-glass);
+    border-radius: 14px;
+    padding: 15px 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 30px rgba(168, 85, 247, 0.1);
+}
+
+.brand-box {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.radar-dot {
+    width: 14px;
+    height: 14px;
+    background: var(--accent-magenta);
+    border-radius: 50%;
+    box-shadow: 0 0 15px var(--accent-magenta);
+    animation: radarPulse 2s infinite;
+}
+
+@keyframes radarPulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(232, 121, 249, 0.7);
+    }
+
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 12px rgba(232, 121, 249, 0);
+    }
+
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(232, 121, 249, 0);
+    }
+}
+
+h1 {
+    font-family: 'Orbitron', sans-serif;
+    margin: 0;
+    font-size: 18px;
+    letter-spacing: 1px;
+    color: #fff;
+}
+
+h1 span {
+    color: var(--accent-purple);
+    font-size: 12px;
+}
+
+.sub-title {
+    margin: 3px 0 0 0;
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.telemetry-hud {
+    display: flex;
+    gap: 20px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+}
+
+.hud-item {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(168, 85, 247, 0.2);
+}
+
+.hud-item span {
+    color: var(--accent-magenta);
+    font-weight: bold;
+}
+
+.pulse-green {
+    color: var(--accent-green) !important;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0.4;
+    }
+}
+
+.dashboard-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 25px;
+}
+
+@media(min-width: 1024px) {
+    .dashboard-layout {
+        grid-template-columns: 420px 1fr;
+    }
+}
+
+.control-panel,
+.visual-panel {
+    background: var(--panel-bg);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--border-glass);
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(168, 85, 247, 0.15);
+    padding-bottom: 12px;
+    margin-bottom: 15px;
+}
+
+.panel-header h2 {
+    font-size: 14px;
+    margin: 0;
+    font-family: 'Orbitron', sans-serif;
+    color: var(--accent-magenta);
+}
+
+.badge {
+    background: rgba(168, 85, 247, 0.15);
+    color: var(--accent-purple);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: bold;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+.badge-alert {
+    background: rgba(244, 63, 94, 0.2);
+    color: var(--accent-red);
+    border: 1px solid var(--accent-red);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: bold;
+    animation: pulse 1.5s infinite;
+}
+
+.upload-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.drop-zone {
+    background: rgba(3, 3, 8, 0.7);
+    border: 2px dashed rgba(168, 85, 247, 0.35);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.drop-zone:hover {
+    border-color: var(--accent-magenta);
+    background: rgba(168, 85, 247, 0.08);
+}
+
+.upload-icon {
+    font-size: 20px;
+    margin-bottom: 3px;
+}
+
+.drop-zone h4 {
+    margin: 3px 0 2px 0;
+    font-size: 12px;
+    color: #fff;
+}
+
+.drop-zone p {
+    margin: 0;
+    font-size: 10px;
+    color: var(--text-muted);
+}
+
+.preview-thumb {
+    width: 100%;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+/* GPS Coordinate Input CSS (New Feature) */
+.coord-box {
+    background: rgba(3, 3, 8, 0.6);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 15px;
+}
+
+.coord-box h4 {
+    margin: 0 0 8px 0;
+    font-size: 11px;
+    font-family: 'Orbitron', sans-serif;
+    color: var(--accent-purple);
+}
+
+.coord-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.coord-inputs input {
+    background: #020205;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    border-radius: 6px;
+    padding: 8px;
+    color: #fff;
+    font-size: 12px;
+    font-family: monospace;
+    outline: none;
+}
+
+.coord-inputs input:focus {
+    border-color: var(--accent-magenta);
+}
+
+.action-container {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.launch-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #9333ea, #c084fc);
+    color: #fff;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 20px rgba(147, 51, 234, 0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.launch-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(192, 132, 252, 0.6);
+}
+
+.diagnostics-box {
+    background: rgba(3, 3, 8, 0.6);
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(168, 85, 247, 0.1);
+}
+
+.diagnostics-box h3 {
+    margin: 0 0 10px 0;
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.diag-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-bottom: 6px;
+}
+
+.diag-row .val {
+    font-family: monospace;
+    color: #e9d5ff;
+}
+
+.text-green {
+    color: var(--accent-green);
+}
+
+.comparison-viewport {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+@media(max-width: 600px) {
+    .comparison-viewport {
+        grid-template-columns: 1fr;
+    }
+}
+
+.viewport-box {
+    background: #020205;
+    border: 1px solid var(--border-glass);
+    border-radius: 10px;
+    padding: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.viewport-tag {
+    display: block;
+    font-size: 10px;
+    font-weight: bold;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.alert-tag {
+    color: var(--accent-red);
+}
+
+.viewport-box img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.highlight-glow {
+    position: relative;
+}
+
+.scanning-laser {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--accent-red);
+    box-shadow: 0 0 12px var(--accent-red);
+    animation: scanLaser 3s infinite ease-in-out;
+}
+
+@keyframes scanLaser {
+    0% {
+        top: 25px;
+        opacity: 0.8;
+    }
+
+    50% {
+        top: 90%;
+        opacity: 1;
+    }
+
+    100% {
+        top: 25px;
+        opacity: 0.8;
+    }
+}
+
+.terminal-report-box {
+    background: #020205;
+    border: 1px solid var(--border-glass);
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.terminal-title {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    color: var(--accent-magenta);
+    border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+}
+
+.timestamp {
+    color: var(--text-muted);
+}
+
+.terminal-content {
+    font-family: monospace;
+    font-size: 12px;
+    color: #f0abfc;
+    line-height: 1.6;
+    min-height: 90px;
+    margin-bottom: 12px;
+}
+
+/* Download Report Button CSS (New Feature) */
+.btn-download {
+    width: 100%;
+    background: rgba(168, 85, 247, 0.15);
+    color: var(--accent-magenta);
+    border: 1px solid var(--accent-purple);
+    padding: 10px;
+    border-radius: 6px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-download:hover {
+    background: var(--accent-purple);
+    color: #fff;
+}

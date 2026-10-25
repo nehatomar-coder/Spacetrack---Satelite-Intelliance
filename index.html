@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORCA-NET // Orbital Intelligence & Satellite Anomaly Command</title>
+    <link rel="stylesheet" href="style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="space-grid-bg"></div>
+
+    <header>
+        <div class="brand-box">
+            <div class="radar-dot"></div>
+            <div>
+                <h1>ORCA-NET <span>// ORBITAL RECONNAISSANCE & AI INTELLIGENCE</span></h1>
+                <p class="sub-title">Secured Satellite Telemetry & Change Detection Matrix</p>
+            </div>
+        </div>
+        <div class="telemetry-hud">
+            <div class="hud-item">ORBIT: <span>LEO-402</span></div>
+            <div class="hud-item">SYS STATUS: <span id="systemStatus" class="pulse-green">ONLINE</span></div>
+        </div>
+    </header>
+
+    <main class="dashboard-layout">
+        <!-- Left Panel: Data Ingestion & Controls -->
+        <section class="control-panel">
+            <div class="panel-header">
+                <h2>🛰️ Satellite Image Feed Ingestion</h2>
+                <span class="badge">SECURE UPLOAD</span>
+            </div>
+
+            <div class="upload-grid">
+                <div class="drop-zone" onclick="document.getElementById('beforeImageInput').click()">
+                    <input type="file" id="beforeImageInput" accept="image/*" style="display:none"
+                        onchange="handleImageUpload(event, 'before')">
+                    <div id="beforePreviewContent">
+                        <div class="upload-icon">📡</div>
+                        <h4>Baseline Feed (Before)</h4>
+                        <p>Click or drop historical capture</p>
+                    </div>
+                </div>
+
+                <div class="drop-zone" onclick="document.getElementById('afterImageInput').click()">
+                    <input type="file" id="afterImageInput" accept="image/*" style="display:none"
+                        onchange="handleImageUpload(event, 'after')">
+                    <div id="afterPreviewContent">
+                        <div class="upload-icon">🔭</div>
+                        <h4>Target Feed (After)</h4>
+                        <p>Click or drop recent capture</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GPS Coordinate Input Box (New Feature) -->
+            <div class="coord-box">
+                <h4>📍 Target GPS Coordinates</h4>
+                <div class="coord-inputs">
+                    <input type="text" id="latInput" placeholder="Latitude" value="28.6139° N">
+                    <input type="text" id="lonInput" placeholder="Longitude" value="77.2090° E">
+                </div>
+            </div>
+
+            <div class="action-container">
+                <button class="launch-btn" onclick="executeAdvancedAnalysis()">
+                    <span>INITIATE ORBITAL AI SCAN</span>
+                    <div class="btn-glow"></div>
+                </button>
+            </div>
+
+            <!-- Live Telemetry Diagnostics -->
+            <div class="diagnostics-box">
+                <h3>Telemetry Diagnostics</h3>
+                <div class="diag-row"><span>Sensor Resolution:</span> <span class="val">0.3m Multi-Spectral</span></div>
+                <div class="diag-row"><span>AI Model Weights:</span> <span class="val">ResNet-UNet v4.2</span></div>
+                <div class="diag-row"><span>Cloud Masking:</span> <span class="val text-green">Active (0.2%
+                        Occlusion)</span></div>
+            </div>
+        </section>
+
+        <!-- Right Panel: Visual Analysis & AI Reports -->
+        <section class="visual-panel" id="analysisResultsSection" style="display: none;">
+            <div class="panel-header">
+                <h2>📊 Multi-Spectral Comparative Analysis</h2>
+                <span class="badge-alert">ANOMALY DETECTED</span>
+            </div>
+
+            <div class="comparison-viewport">
+                <div class="viewport-box">
+                    <span class="viewport-tag">Baseline View</span>
+                    <img id="viewBefore" src="" alt="Baseline">
+                </div>
+                <div class="viewport-box highlight-glow">
+                    <span class="viewport-tag alert-tag">AI Diff Overlay (Changes Highlighted)</span>
+                    <img id="viewAfter" src="" alt="Target">
+                    <div class="scanning-laser"></div>
+                </div>
+            </div>
+
+            <div class="terminal-report-box">
+                <div class="terminal-title">
+                    <span>EXECUTION LOG // AI ANOMALY ASSESSMENT</span>
+                    <span class="timestamp" id="timestampField"></span>
+                </div>
+                <div class="terminal-content" id="terminalOutput"></div>
+
+                <!-- Download Report Button (New Feature) -->
+                <button class="btn-download" id="downloadBtn" style="display:none;" onclick="downloadReport()">
+                    📥 Download Official GIS Compliance Report (.txt)
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
